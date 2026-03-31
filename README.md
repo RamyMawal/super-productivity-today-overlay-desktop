@@ -22,7 +22,7 @@ read‑only Today panel for your desktop.
 </p>
 
 <p align="center">
-  <img src="screenshots/overlay-desktop-2.jpg"
+  <img src="screenshots/overlay-desktop-2.jpeg"
        alt="Super Productivity Today Overlayed apps /grown"
        width="350">
 </p>
