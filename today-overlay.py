@@ -75,6 +75,23 @@ def save_config(cfg: dict[str, Any]) -> None:
 def get_workspace_name() -> str:
     try:
         out = subprocess.check_output(
+            ["hyprctl", "activeworkspace", "-j"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+        data = json.loads(out)
+        if isinstance(data, dict):
+            name = str(data.get("name") or "").strip()
+            if name:
+                return name
+            workspace_id = data.get("id")
+            if workspace_id is not None:
+                return str(workspace_id)
+    except Exception:
+        pass
+
+    try:
+        out = subprocess.check_output(
             ["wmctrl", "-d"],
             text=True,
             stderr=subprocess.DEVNULL,
@@ -589,4 +606,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -32,7 +32,9 @@ read‑only Today panel for your desktop.
 
 ## Requirements
 
-- Linux + X11 (tested on Linux Mint Cinnamon)
+- Linux desktop session
+- X11 works as originally designed
+- Wayland/Hyprland works with the Hyprland notes below
 - Python 3
 - GTK 3 bindings:
 
@@ -42,6 +44,17 @@ sudo apt install wmctrl python3-gi python3-gi-cairo gir1.2-gtk-3.0
 
 - Super Productivity with **Local REST API** enabled:
   - Settings → **Misc** → enable **Local REST API (desktop only)**
+
+### Arch / Hyprland packages
+
+On Arch, install:
+
+```bash
+sudo pacman -S python-gobject gtk3 xorg-xwayland
+```
+
+`wmctrl` is optional on Hyprland because the overlay now prefers `hyprctl`
+for workspace detection.
 
 ## Files in this repo
 
@@ -113,6 +126,28 @@ EOF
 
 Then log out / log back in.
 
+## Hyprland notes
+
+The overlay now reads the active workspace from `hyprctl activeworkspace -j`
+when running under Hyprland.
+
+To make the window behave more like a true always-visible overlay across
+workspaces, add a rule such as:
+
+```ini
+windowrule = match:class ^(super-today-overlay)$, float on
+windowrule = match:class ^(super-today-overlay)$, pin on
+```
+
+Then reload Hyprland:
+
+```bash
+hyprctl reload
+```
+
+You can add extra Hyprland rules if you want different focus, animation, or
+opacity behavior, but `float` + `pin` are the main compatibility pieces.
+
 ## How it finds Today tasks
 
 The overlay talks to Super Productivity’s **local REST API** on
@@ -129,5 +164,3 @@ instead of guessing based on task fields, which matches the app’s own logic.
 If the API is disabled or not reachable, the overlay can fall back to the
 backup JSONs under `~/.config/superProductivity/backups/` (see the longer
 guide for details).
-
-
